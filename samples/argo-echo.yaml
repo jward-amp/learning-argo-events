@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: argo-echo
+spec:
+  entrypoint: root
+  arguments:
+    parameters:
+      - name: message
+        value: hello world
+      - name: ping
+        value: '0'
+  templates:
+    - name: root
+      steps:
+        - - name: echo-message
+            template: echo
+            arguments:
+              parameters:
+                - name: message
+                  value: "{{workflow.parameters.message}}"
+        - - name: ping
+            when: "{{workflow.parameters.ping}} == 1"
+            template: ping
+    - name: echo
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: busybox
+        command: [ echo ]
+        args: [ "{{inputs.parameters.message}}" ]
+    - name: ping
+      container:
+        image: busybox
+        command: [ wget ]
+        args:
+          - "-nv"
+          - "-qO-"
+          - "--header"
+          - 'Content-Type: application/json'
+          - "--post-data"
+          - '{"message": "PONG {{workflow.name}}!"}'
+          - "http://ping-eventsource-svc:12001/ping"

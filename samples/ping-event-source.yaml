@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: ping
+spec:
+  service:
+    ports:
+      - port: 12001
+        targetPort: 12001
+  webhook:
+    ping:
+      port: "12001"
+      endpoint: /ping
+      method: POST

@@ -1,0 +1,23 @@
+apiVersion: skaffold/v4beta9
+kind: Config
+metadata:
+  name: learning-argo-events
+
+deploy:
+  kubeContext: minikube
+
+profiles:
+  - name: argo
+    deploy:
+      helm:
+        releases:
+          - name: argo-workflows
+            chartPath: ./argo-workflows
+            namespace: argo
+            valuesFiles:
+              - "./argo-workflows/values.minikube.yaml"
+          - name: argo-events
+            chartPath: ./argo-events
+            namespace: argo-events
+            valuesFiles:
+              - "./argo-events/values.minikube.yaml"

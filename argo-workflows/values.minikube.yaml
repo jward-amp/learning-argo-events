@@ -1,0 +1,25 @@
+argo-workflows:
+  crds:
+    install: true
+    keep: false
+  namespaceOverride: argo
+  workflow:
+    serviceAccount:
+      create: true
+      name: "argo-workflow"
+    rbac:
+      create: true
+  controller:
+    parallelism: 5
+    workflowDefaults:
+      spec:
+        serviceAccountName: "argo-workflow"
+        ttlStrategy:
+          secondsAfterCompletion: 600
+    workflowNamespaces:
+      - argo
+      - argo-events
+      - default
+  server:
+    authModes: [ "server" ]
+    secure: false

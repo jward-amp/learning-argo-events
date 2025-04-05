@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: ping
+spec:
+  schedules:
+    - "*/1 * * * *"
+  startingDeadlineSeconds: 0
+  successfulJobsHistoryLimit: 5
+  suspend: false
+  workflowSpec:
+    workflowTemplateRef:
+      name: argo-echo
+    arguments:
+      parameters:
+        - name: message
+          value: "PING!"
+        - name: ping
+          value: '1'

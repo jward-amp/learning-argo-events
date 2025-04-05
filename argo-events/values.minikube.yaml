@@ -1,0 +1,5 @@
+argo-events:
+  crds:
+    install: true
+    keep: false
+  namespaceOverride: argo-events
